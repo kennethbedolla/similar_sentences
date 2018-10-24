@@ -57,7 +57,7 @@ void compare_docs::run_tfidf(std::string file_name1, std::string file_name2)
 
 std::string compare_docs::remove_white_spaces(std::string str)
 {
-    std::string trimed = std::regex_replace(str, std::regex("^ +| +$|( ) +"), "$1");
+    //std::string trimed = std::regex_replace(str, std::regex("^ +| +$|( ) +"), "$1");
     /*str.erase(remove(str.begin(), str.end(), '\"'), str.end());
     // Strip leading whitespace
     str.erase(0, str.find_first_not_of(" \r\n"));
@@ -67,7 +67,9 @@ std::string compare_docs::remove_white_spaces(std::string str)
     {
         str.erase(new_end + 1);
     }*/
-    return trimed;
+    std::string output;
+	unique_copy (str.begin(), str.end(), back_insert_iterator<string>(output), [](char a,char b){ return isspace(a) && isspace(b);});  
+    return output;
 }
 
 std::vector<std::string> compare_docs::prepare_doc(std::string file_name)
@@ -77,10 +79,10 @@ std::vector<std::string> compare_docs::prepare_doc(std::string file_name)
     file_string = load_document(file_name);
     file_string = remove_white_spaces(file_string); //This isn't working properly.
     d = doc_to_sentences(file_string);
-    /*for (std::vector<std::string>::iterator it = d.begin(); it != d.end(); ++it)
-    {
-        *it = trim(*it);
-    }*/
+    //for (std::vector<std::string>::iterator it = d.begin(); it != d.end(); ++it)
+    //{
+        //*it = remove_white_spaces(*it);
+    //}
     return d;
 }
 
