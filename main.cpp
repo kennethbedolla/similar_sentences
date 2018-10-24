@@ -1,4 +1,3 @@
-#include "sentence_parser.h"
 #include "compare_docs.h"
 
 int main(int argc, char *const *argv)
