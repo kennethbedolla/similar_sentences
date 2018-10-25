@@ -2,7 +2,7 @@ CC = g++
 INCLUDES := $(addprefix -I, ./ ./word2vec/include)                                                                                                                                     
 LIBIS := $(addprefix -L, ../bin/lib)
 
-CFLAGS = -W -O2 -std=c++11
+CFLAGS = -W -O2 -std=c++11 -Wc++11-extensions
 
 all: compare
 

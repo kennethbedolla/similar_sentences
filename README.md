@@ -19,4 +19,4 @@ Execute the following commands:
 
 ### Basic usage
 `./compare books/frankenstein.txt books/pride-and-prejudice.txt .95`
-The `.95` is a minimum similarity value. Anything above .93 gives best results.
+The `.95` is a minimum similarity float value. Anything above .93 gives best results.

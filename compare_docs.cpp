@@ -55,21 +55,14 @@ void compare_docs::run_tfidf(std::string file_name1, std::string file_name2)
     }
 }
 
-std::string compare_docs::remove_white_spaces(std::string str)
+void compare_docs::replace_all(std::string &str, const std::string &from, const std::string &to)
 {
-    //std::string trimed = std::regex_replace(str, std::regex("^ +| +$|( ) +"), "$1");
-    /*str.erase(remove(str.begin(), str.end(), '\"'), str.end());
-    // Strip leading whitespace
-    str.erase(0, str.find_first_not_of(" \r\n"));
-    // Strip trailing whitespace
-    auto new_end = str.find_last_not_of(" \r\n");
-    if (new_end != string::npos)
+    size_t start_pos = 0;
+    while ((start_pos = str.find(from, start_pos)) != std::string::npos)
     {
-        str.erase(new_end + 1);
-    }*/
-    std::string output;
-	unique_copy (str.begin(), str.end(), back_insert_iterator<string>(output), [](char a,char b){ return isspace(a) && isspace(b);});  
-    return output;
+        str.replace(start_pos, from.length(), to);
+        start_pos += to.length(); // Handles case where 'to' is a substring of 'from'
+    }
 }
 
 std::vector<std::string> compare_docs::prepare_doc(std::string file_name)
@@ -77,12 +70,14 @@ std::vector<std::string> compare_docs::prepare_doc(std::string file_name)
     std::string file_string;
     std::vector<std::string> d;
     file_string = load_document(file_name);
-    file_string = remove_white_spaces(file_string); //This isn't working properly.
+    replace_all(file_string, "Mr.", "Mr");
+    replace_all(file_string, "Mrs.", "Mrs");
+    replace_all(file_string, "St.", "St");
+    replace_all(file_string, "eg.", "eg");
+    replace_all(file_string, "etc.", "etc");
+    
     d = doc_to_sentences(file_string);
-    //for (std::vector<std::string>::iterator it = d.begin(); it != d.end(); ++it)
-    //{
-        //*it = remove_white_spaces(*it);
-    //}
+
     return d;
 }
 
@@ -121,8 +116,8 @@ std::vector<std::pair<int, int>> compare_docs::similar_sentences(float minimum, 
             d2vModel.nearest(doc2vecd, nearest, d2vModel.modelSize(), minimum);
             for (auto const &i : nearest)
             {
-                std::cout << "for doc2 sentence " << j << "\n";
-                std::cout << i.first << ": " << i.second << std::endl;
+                //std::cout << "for doc2 sentence " << j << "\n";
+                //std::cout << i.first << ": " << i.second << std::endl;
                 sentence_pairs.push_back(std::make_pair(i.first, j));
             }
         }
@@ -137,11 +132,16 @@ std::vector<std::pair<int, int>> compare_docs::similar_sentences(float minimum, 
 
 void compare_docs::print_similar_sentences(std::vector<std::pair<int, int>> pairs, std::vector<std::string> doc1, std::vector<std::string> doc2)
 {
-    printf("number of pairs inisde %d\n", pairs.size());
+    cout << "*************** Number of similar sentences = " << pairs.size() << " ***************" << std::endl << std::endl << std::endl;
     for (auto const &i : pairs)
     {
-        std::cout << i.first << ":" << i.second << std::endl;
-        std::cout << doc1[i.first] << ": " << doc2[i.second] << std::endl;
+        std::cout << "Sentence #" <<i.first << " from first document:" << std::endl;
+        std::cout << doc1[i.first] << std::endl << std::endl << std::endl;
+        std::cout << "IS SIMILAR TO" << std::endl << std::endl << std::endl; 
+        std::cout << "Sentence # " << i.second << " from second document:"<< std::endl;
+        std::cout << doc2[i.second] << std::endl<< std::endl << std::endl;
+        std::cout << "***********************************************************";
+        std::cout << std::endl << std::endl << std::endl;
     }
 }
 
@@ -186,6 +186,5 @@ std::vector<std::string> compare_docs::tokenize(std::string text, char delimeter
         tokens.push_back(tok);
         size++;
     }
-    printf("size of tokens is %d\n", tokens.size());
     return tokens;
 }
