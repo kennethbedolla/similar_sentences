@@ -25,6 +25,8 @@ compare_docs::compare_docs()
 compare_docs::~compare_docs()
 {
 }
+
+// Was unable to integrate resulting matrix with doc2vec comparison for "interesting" rating syste.
 void compare_docs::run_tfidf(std::string file_name1, std::string file_name2)
 {
 
@@ -55,6 +57,7 @@ void compare_docs::run_tfidf(std::string file_name1, std::string file_name2)
     }
 }
 
+
 void compare_docs::replace_all(std::string &str, const std::string &from, const std::string &to)
 {
     size_t start_pos = 0;
@@ -65,6 +68,7 @@ void compare_docs::replace_all(std::string &str, const std::string &from, const 
     }
 }
 
+//loads document, massage, tokenize.
 std::vector<std::string> compare_docs::prepare_doc(std::string file_name)
 {
     std::string file_string;
@@ -81,6 +85,7 @@ std::vector<std::string> compare_docs::prepare_doc(std::string file_name)
     return d;
 }
 
+//use doc2vec model to compare sentences. 
 std::vector<std::pair<int, int>> compare_docs::similar_sentences(float minimum, std::vector<std::string> doc1_sentences, std::vector<std::string> doc2_sentences)
 {
     std::vector<std::pair<int, int>> sentence_pairs;
@@ -130,6 +135,7 @@ std::vector<std::pair<int, int>> compare_docs::similar_sentences(float minimum, 
     return sentence_pairs;
 }
 
+//outputs similar sentence list. 
 void compare_docs::print_similar_sentences(std::vector<std::pair<int, int>> pairs, std::vector<std::string> doc1, std::vector<std::string> doc2)
 {
     cout << "*************** Number of similar sentences = " << pairs.size() << " ***************" << std::endl << std::endl << std::endl;
@@ -164,6 +170,7 @@ std::string compare_docs::load_document(const std::string file_location)
     return stripped_header.substr(0, stripped_header.find(trailing_meta_sentinel));
 }
 
+//EXTREMELY basic sentence tokenization. 
 std::vector<std::string> compare_docs::doc_to_sentences(std::string str)
 {
     str.erase(remove(str.begin(), str.end(), '\"'), str.end());
@@ -175,6 +182,7 @@ std::vector<std::string> compare_docs::doc_to_sentences(std::string str)
     return sentences;
 }
 
+//tokenization used for tfidf
 std::vector<std::string> compare_docs::tokenize(std::string text, char delimeter)
 {
     std::vector<std::string> tokens;
